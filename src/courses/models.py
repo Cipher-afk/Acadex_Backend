@@ -6,6 +6,7 @@ class Course(BaseModel):
     course_code: str
     course_title: str
     # lecturers: List[str]
+    level: int
     department: str
     grade_unit: int
 

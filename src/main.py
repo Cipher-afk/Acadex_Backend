@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from database.database_init import init_db
 from courses.routes import router as course_router
+from notes.routes import router as notes_router
 
 
 async def lifespan(app: FastAPI):
@@ -11,4 +12,5 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Acadex", lifespan=lifespan)
-app.include_router(router=course_router, prefix="/courses")
+app.include_router(router=course_router, prefix="/courses", tags=["Courses"])
+app.include_router(router=notes_router, prefix="/notes", tags=["Notes"])

@@ -8,3 +8,10 @@ class NoteResponse(BaseModel):
     # add page count
     date_uploaded: datetime
     uploaded_by: str
+
+
+class Note(BaseModel):
+    course_code: str
+    level: str
+    department: str
+    uploaded_by: str

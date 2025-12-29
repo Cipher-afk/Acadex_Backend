@@ -2,6 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from .db_models import Courses
 from .models import Course as course_model
+from utils import make_folder
+from datetime import datetime
 
 
 class CoursesService:
@@ -19,9 +21,11 @@ class CoursesService:
 
     async def add_course(self, course: course_model, session: AsyncSession):
         course_data = course.model_dump()
+        year = int(datetime.year)
         new_course = Courses(**course_data)
         session.add(new_course)
         await session.commit()
+        make_folder(course_data["course_code"], year=year)
         return new_course
 
     async def update_info(self, course: Courses, info: dict, session: AsyncSession):
