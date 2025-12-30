@@ -29,7 +29,7 @@ class CoursesService:
         return new_course
 
     async def update_info(self, course: Courses, info: dict, session: AsyncSession):
-        updated_course = Courses()
+        updated_course = course
         for key, value in info.items():
             setattr(updated_course, key, value)
         await session.commit()
