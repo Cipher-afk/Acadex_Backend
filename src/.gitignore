@@ -2,3 +2,4 @@
 __pycache__
 .pyc 
 .ini
+__init__.py

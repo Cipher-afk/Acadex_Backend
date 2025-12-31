@@ -11,3 +11,5 @@ class Users(SQLModel, table=True):
     department: str
     level: int
     password_hash: str
+    role: str = Field(sa_column=Column(pg.VARCHAR, server_default="user"))
+    is_verified: str = Field(sa_column=Column(pg.VARCHAR, server_default="false"))

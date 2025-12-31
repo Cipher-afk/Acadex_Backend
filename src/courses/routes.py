@@ -4,25 +4,37 @@ from typing import List
 from .service import CoursesService
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.database_init import get_session
+from dependencies.authorization import AccessTokenBearer
 
 router = APIRouter()
 service = CoursesService()
 
 
 @router.post("/add_course")
-async def add_course(course: Course, session: AsyncSession = Depends(get_session)):
+async def add_course(
+    course: Course,
+    session: AsyncSession = Depends(get_session),
+    token_data: dict = Depends(AccessTokenBearer()),
+):
     new_course = await service.add_course(course, session)
     return new_course
 
 
 @router.get("/view_course", response_model=List[CourseResponse])
-async def view_course(department: str, session: AsyncSession = Depends(get_session)):
+async def view_course(
+    session: AsyncSession = Depends(get_session),
+    token_data: dict = Depends(AccessTokenBearer()),
+):
+    department = token_data["user"]["department"]
     departmental_courses = await service.get_course_by_department(department, session)
     return departmental_courses
 
 
-@router.get("/view_courses", response_model=List[CourseResponse])
-async def view_courses(session: AsyncSession = Depends(get_session)):
+@router.get("/view_all_courses", response_model=List[CourseResponse])
+async def view_courses(
+    session: AsyncSession = Depends(get_session),
+    token_data: dict = Depends(AccessTokenBearer()),
+):
     courses = await service.get_courses(session)
     return courses
 
