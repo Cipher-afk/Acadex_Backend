@@ -14,15 +14,23 @@ class CoursesService:
         courses = result.scalars().all()
         return courses
 
-    async def get_course_by_department(self, department: str, session: AsyncSession):
-        statement = select(Courses).where(department == Courses.department)
+    async def get_course_by_user_id(self, email: str, session: AsyncSession):
+        statement = select(Courses).where(email == Courses.user_id)
         result = await session.execute(statement=statement)
         course = result.scalars().all()
+        return course
 
-    async def add_course(self, course: course_model, session: AsyncSession):
+    async def get_course_by_course_code(self, course_code: str, session: AsyncSession):
+        statement = select(Courses).where(course_code == Courses.course_code)
+        result = await session.execute(statement=statement)
+        course = result.scalars().first()
+        return course
+
+    async def add_course(self, email: str, course: course_model, session: AsyncSession):
         course_data = course.model_dump()
-        year = int(datetime.year)
+        year = datetime.now().year
         new_course = Courses(**course_data)
+        new_course.user_id = email
         session.add(new_course)
         await session.commit()
         make_folder(course_data["course_code"], year=year)

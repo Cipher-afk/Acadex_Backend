@@ -1,4 +1,7 @@
 from pydantic import BaseModel, EmailStr, field_validator, Field
+from typing import List
+from courses.db_models import Courses
+from notes.db_models import Notes
 
 
 class SignUp(BaseModel):
@@ -29,3 +32,4 @@ class User(BaseModel):
     matric_number: str
     department: str
     level: int
+    courses: List["Courses"]

@@ -1,8 +1,8 @@
-from sqlmodel import SQLModel, Field, Column
-from typing import List, Sequence
+from sqlmodel import SQLModel, Field, Column, Relationship
+from typing import Optional, List
 import sqlalchemy.dialects.postgresql as pg
-from .models import Course
-import string
+from auth import db_models
+from notes import db_models
 
 
 class Courses(SQLModel, table=True):
@@ -15,3 +15,10 @@ class Courses(SQLModel, table=True):
     department: str
     level: int
     grade_unit: int
+    user_id: str = Field(foreign_key="users.email")
+    user: Optional["db_models.Users"] = Relationship(
+        back_populates="courses", sa_relationship_kwargs={"lazy": "selectin"}
+    )
+    notes: List["db_models.Notes"] = Relationship(
+        back_populates="courses", sa_relationship_kwargs={"lazy": "selectin"}
+    )

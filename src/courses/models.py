@@ -1,5 +1,7 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
+from auth.db_models import Users
+from notes.db_models import Notes
 
 
 class Course(BaseModel):
@@ -12,8 +14,10 @@ class Course(BaseModel):
 
 
 class CourseResponse(Course):
-    pass
+    user: Optional["Users"]
+    notes: List["Notes"]
 
 
 class UpdateCourse(Course):
-    pass
+    course_code: str
+    course_title: str

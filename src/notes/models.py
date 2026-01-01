@@ -1,5 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional, List
+from auth.db_models import Users
+from courses.db_models import Courses
 
 
 class NoteResponse(BaseModel):
@@ -8,6 +11,7 @@ class NoteResponse(BaseModel):
     # add page count
     date_uploaded: datetime
     uploaded_by: str
+    courses: List["Courses"]
 
 
 class Note(BaseModel):

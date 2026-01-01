@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Depends, Form
+from fastapi import APIRouter, UploadFile, File, Depends, Form, HTTPException
 from fastapi.responses import FileResponse
 from .models import Note, NoteResponse
 from .services import NoteService
@@ -22,12 +22,12 @@ async def upload_note(
     course_code: str = Form(...),
     uploaded_by: str = Form(...),
     description: str = Form(...),
+    level: int = Form(...),
     file: UploadFile = File(...),
     session: AsyncSession = Depends(get_session),
     token_data: dict = Depends(AccessTokenBearer()),
 ):
     department = token_data["user"]["department"]
-    level = token_data["user"]["level"]
     note_data = {
         "course_code": course_code,
         "level": level,
@@ -40,10 +40,11 @@ async def upload_note(
             note_data=note_data, file=file, session=session
         )
         year = datetime.now().year
-        new_note.file_url = (
-            f"{BASE_DIR}/{course_code}/{year}/{new_note.note_id}-{new_note.file_name}"
-        )
-        await session.commit()
+        info = {
+            "file_url": rf"{BASE_DIR}\{course_code}\{year}\{new_note.note_id}-{new_note.file_name}"
+        }
+        await service.update_info(new_note, info=info, session=session)
+        print("commited")
         make_folder(course_code=course_code, year=year)
         add_file_to_folder(file=file, file_name=new_note.file_url)
         return new_note
@@ -54,9 +55,15 @@ async def upload_note(
 
 @router.get("/download_note", response_class=FileResponse)
 async def download_note(
-    file_name: str, token_data: dict = Depends(AccessTokenBearer())
+    file_name: str,
+    token_data: dict = Depends(AccessTokenBearer()),
+    session: AsyncSession = Depends(get_session),
 ):
-    pass
+    note = await service.get_note_by_filename(filename=file_name, session=session)
+    if note is None:
+        raise HTTPException(status_code=404, detail="file not found")
+    file_url = note.file_url
+    return FileResponse(path=file_url, filename=file_name)
 
 
 @router.get("/view_notes", response_model=List[NoteResponse])

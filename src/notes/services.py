@@ -29,6 +29,12 @@ class NoteService:
         notes = result.scalars().all()
         return notes
 
+    async def get_note_by_filename(self, filename: str, session: AsyncSession):
+        statement = select(Notes).where(Notes.file_name == filename)
+        result = await session.execute(statement)
+        notes = result.scalars().first()
+        return notes
+
     async def get_note_by_course_code(self, course_code: str, session: AsyncSession):
         statement = (
             select(Notes)
@@ -44,3 +50,10 @@ class NoteService:
         result = await session.execute(statement=statement)
         notes = result.scalars().all()
         return notes
+
+    async def update_info(self, notes: Notes, info: dict, session: AsyncSession):
+        updated_course = notes
+        for key, value in info.items():
+            setattr(updated_course, key, value)
+        await session.commit()
+        return updated_course
