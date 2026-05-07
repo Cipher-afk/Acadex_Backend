@@ -7,10 +7,10 @@ from notes.db_models import Notes
 class SignUp(BaseModel):
     full_name: str
     email: EmailStr
-    matric_number: str = Field(pattern=r"FUO/\d{2}/[a-zA-Z]{3}/\d{5}$")
+    matric_number: str = Field(pattern=r"[A-Za-z]{3}/\d{2}/[a-zA-Z]{3}/\d{5}$")
     department: str
     level: int
-    password: str = Field(min_length=6)
+    password: str = Field(min_length=6, pattern=r"\d+[A-Z][a-z]\W")
 
 
 @field_validator("level")
