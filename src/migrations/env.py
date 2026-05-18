@@ -4,12 +4,9 @@ from logging.config import fileConfig
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-
-from alembic import context
-from auth.db_models import Users
-from courses.db_models import Courses
-from notes.db_models import Notes
+from database.db_models import User, University, Department, Course, UserCourse, Faculty
 from config import settings
+from alembic import context
 from sqlmodel import SQLModel
 
 # this is the Alembic Config object, which provides

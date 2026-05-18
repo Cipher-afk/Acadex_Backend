@@ -1,35 +1,23 @@
-from pydantic import BaseModel, EmailStr, field_validator, Field
-from typing import List
-from courses.db_models import Courses
-from notes.db_models import Notes
+from pydantic import (
+    BaseModel,
+    EmailStr,
+)
+from fastapi import HTTPException
+
+LEVELS = list(range(100, 800))
 
 
-class SignUp(BaseModel):
-    full_name: str
-    email: EmailStr
-    matric_number: str = Field(pattern=r"[A-Za-z]{3}/\d{2}/[a-zA-Z]{3}/\d{5}$")
-    department: str
-    level: int
-    password: str = Field(min_length=6, pattern=r"\d+[A-Z][a-z]\W")
-
-
-@field_validator("level")
-def validator(cls, value):
-    levels = [100, 200, 300, 400, 500, 600, 700]
-    if value not in levels:
-        raise Exception("Please input a legit level")
-    return value
-
-
-class Login(BaseModel):
-    email: EmailStr
-    password: str
-
-
-class User(BaseModel):
-    full_name: str
+class SignUpModel(BaseModel):
     email: EmailStr
     matric_number: str
-    department: str
+    username: str
     level: int
-    courses: List["Courses"]
+    password: str
+    university_name: str
+    faculty_name: str
+    department_name: str
+
+
+class LoginModel(BaseModel):
+    credential: str
+    password: str

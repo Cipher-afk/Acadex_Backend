@@ -1,0 +1,72 @@
+{
+    "Federal University Of Otueke": {
+        "Faculty of Education": [
+            "Foundation Arts and Social Science Education",
+            "Vocational and Technology Education",
+            "Business Education",
+            "Computer Science Education",
+            "Science Education",
+            "Social Science Education"
+        ],
+        "Faculty of Engineering": [
+            "Chemical Engineering",
+            "Civil Engineering", 
+            "Electrical Engineering",
+            "Mechanical Engineering",
+            "Mechatronics Engineering",
+            "Petroleum and Gas Engineering"
+        ],
+        "Faculty of Humanities": [
+            "English & Communication Studies",
+            "History and International Studies",
+            "Theatre and Film Studies",
+            "Philosophy",
+            "Journalism and Media Studies"
+        ],
+        "Faculty of Management Sciences": [
+            "Accounting",
+            "Banking and Finance",
+            "Business Administration", 
+            "Tourism & Hospitality",
+            "Entrepreneurship", 
+            "Marketing", 
+            "Procurement & Logistics"
+        ],
+        "Faculty of Science": [
+            "Biology", 
+            "Environmental Management & Toxicology",
+            "Biochemistry",
+            "Computer Science & Informatics",
+            "Cybersecurity",
+            "Physics",
+            "Chemistry",
+            "Microbiology",
+            "Mathematics",
+            "Statistics"
+        ],
+        "Faculty of Social Sciences": [
+            "Library and Information Science",
+            "Sociology & Anthropology", 
+            "Criminology & Security Studies",
+            "Economics and Development Studies",
+            "Political Science",
+            "Public Administration"
+        ],
+        "Faculty of Basic Medical Sciences": [
+            "Human Anatomy",
+            "Human Physiology"
+        ],
+        "Faculty of Medical Laboratory Science": [
+            "Medical Microbiology and Parasitology/Immunology",
+            "Chemical Pathology and Molecular Diagnostics",
+            "Haematology and Blood Transfusion Science",
+            "Histopathology and Cytopathology"
+        ],
+        "Faculty of Nursing Sciences": [
+            "Mental Health and Psychiatric Nursing",
+            "Medical and Surgical Nursing",
+            "Community and Public Health Nursing",
+            "Maternal and Child Health Nursing"
+        ]
+    }
+}

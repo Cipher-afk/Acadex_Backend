@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database.database_init import get_session
 from auth.service import UserService
 from typing import List
-from auth.db_models import Users
+from database.db_models import User
 
 service = UserService()
 
@@ -69,7 +69,7 @@ class RoleAuthorization:
     def __init__(self, roles: List[str]):
         self.roles = roles
 
-    async def __call__(self, user: Users = Depends(get_current_user)):
+    async def __call__(self, user: User = Depends(get_current_user)):
         if user.role not in self.roles:
             raise HTTPException(status_code=403, detail="Authorization Error")
         return True
