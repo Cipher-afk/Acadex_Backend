@@ -38,6 +38,7 @@ router = APIRouter()
 service = UserService()
 UNIVERSITY = "Federal University Of Otueke"
 jinja = Jinja2Templates(directory="templates")
+HOME_LINK = f"{s.DOMAIN_NAME}/docs"
 
 
 @router.get("/add_university")
@@ -75,15 +76,30 @@ async def add_departments(session: AsyncSession = Depends(get_session)):
     return all_departments
 
 
-@router.get("/get_departments")
-async def get_departments(session: AsyncSession = Depends(get_session)):
-    departments = await service.get_all_departments(session=session)
+@router.get("/universities")
+async def get_university(session: AsyncSession = Depends(get_session)):
+    universities = await service.get_all_universities(session=session)
+    return universities
+
+
+@router.get("/university_faculties/{university_id}")
+async def get_faculties(
+    university_id: int, session: AsyncSession = Depends(get_session)
+):
+    faculties = await service.get_university_faculties(
+        university_id=university_id, session=session
+    )
+    return faculties
+
+
+@router.get("/faculty_departments/{faculty_id}")
+async def get_departments(
+    faculty_id: int, session: AsyncSession = Depends(get_session)
+):
+    departments = await service.get_faculty_departments(
+        faculty_id=faculty_id, session=session
+    )
     return departments
-
-
-# @router.get('/university')
-# async def get_university(session:AsyncSession = Depends(get_session)):
-#     university = await service.get_
 
 
 @router.post("/signup")
@@ -200,7 +216,7 @@ async def verify_email(
 ):
     token_data = await decode_safe_token(token)
     email = token_data["email"]
-    home_link = f"{s.DOMAIN_NAME}/docs"
+    home_link = HOME_LINK
     user = await service.get_user_by_email(email=email, session=session)
     await service.update_user(user=user, info={"is_verified": True}, session=session)
     return jinja.TemplateResponse(
@@ -221,7 +237,7 @@ async def request_password_reset(
     user = await service.get_user_by_email(email=email, session=session)
     if user is None:
         raise HTTPException(status_code=404, detail="User Not Found")
-    safe_token = create_safe_token(user_data={"email": user.email})
+    safe_token = await create_safe_token(user_data={"email": user.email})
     link = f"{s.DOMAIN_NAME}/auth/password_reset/{safe_token}"
     password_reset_html = get_password_reset_email(name=user.username, link=link)
     message = await create_message(
@@ -246,7 +262,7 @@ async def reset_password(
     if token_data is None:
         raise HTTPException(status_code=403, detail="Invalid Token")
     email = token_data["email"]
-    user = await service.get_user_by_email(email=email)
+    user = await service.get_user_by_email(email=email, session=session)
     if user is not None:
         return jinja.TemplateResponse(
             request=request,
@@ -263,7 +279,7 @@ async def verify_reset_password(
     confirm_password: str = Form(...),
     session: AsyncSession = Depends(get_session),
 ):
-    token_data = decode_safe_token(token=token)
+    token_data = await decode_safe_token(token=token)
     if token_data is None:
         raise HTTPException(status_code=403, detail="Invalid Token")
     if new_password != confirm_password:
@@ -278,7 +294,7 @@ async def verify_reset_password(
     return jinja.TemplateResponse(
         request=request,
         name="password_reset_verified.html",
-        context={"request": request},
+        context={"request": request, "home_link": HOME_LINK},
     )
 
 
@@ -288,7 +304,7 @@ async def get_current_user(
     session: AsyncSession = Depends(get_session),
 ):
     email = token_data["user"]["email"]
-    user = await service.get_user_by_email(email=email)
+    user = await service.get_user_by_email(email=email, session=session)
     return user
 
 

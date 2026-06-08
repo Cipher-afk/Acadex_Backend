@@ -190,7 +190,19 @@ class UserService:
         faculty = result.scalars().first()
         return faculty
 
-    async def get_faculty_departments(faculty_id: int, session: AsyncSession):
+    async def get_all_universities(self, session: AsyncSession):
+        statement = select(University)
+        result = await session.execute(statement=statement)
+        universities = result.scalars().all()
+        return universities
+
+    async def get_university_faculties(self, university_id: int, session: AsyncSession):
+        statement = select(Faculty).where(university_id == Faculty.university_id)
+        results = await session.execute(statement)
+        faculties = results.scalars().all()
+        return faculties
+
+    async def get_faculty_departments(self, faculty_id: int, session: AsyncSession):
         statement = select(Department).where(faculty_id == Department.faculty_id)
         results = await session.execute(statement=statement)
         faculty_departments = results.scalars().all()

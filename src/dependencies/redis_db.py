@@ -6,7 +6,7 @@ EXPIRY = 3600
 
 
 async def add_to_blacklist(jti: str):
-    client.set(name=jti, value="", ex=EXPIRY)
+    await client.set(name=jti, value="", ex=EXPIRY)
 
 
 async def is_in_blacklist(jti: str):
